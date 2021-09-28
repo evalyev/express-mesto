@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "lint": "npx eslint ."
+    "start": "PORT=3000 node app.js",
+    "lint": "npx eslint .",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
