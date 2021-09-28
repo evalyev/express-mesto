@@ -1,34 +1,28 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-// Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
+const path = require('path');
+const bodyParser = require('body-parser');
 
 const app = express(); 
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-    useFindAndModify: false
-});
+  useNewUrlParser: true
+}).then(res => {
+  console.log("ПОДКЛЮЧИЛИСЬ К БД")
+}).catch(res => {
+  console.log("Ошибка: " + res.message)
+})
 
-const userSchema = new mongoose.Schema({
-  name: { // у пользователя есть имя — опишем требования к имени в схеме:
-    type: String, // имя — это строка
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
-    minlength: 2, // минимальная длина имени — 2 символа
-    maxlength: 30, // а максимальная — 30 символов
-  },
-  gender: {
-    type: String, // гендер — это строка
-    enum: ['м', 'ж', 'другой'] // gender может принимать одно из трёх значений
-  },
-  about: String, // тип — String
+app.use((req, res, next) => {
+  req.user = {
+    _id: '6153425b4b8ee76a1e903416' // вставьте сюда _id созданного в предыдущем пункте пользователя
+  };
+
+  next();
 }); 
 
 app.get('/', (req, res) => {
@@ -40,3 +34,13 @@ app.get('/', (req, res) => {
         </html>`
     );
 }); 
+
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
+
+// Слушаем 3000 порт
+const { PORT = 3000 } = process.env;
+
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+});
