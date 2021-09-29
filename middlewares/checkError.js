@@ -3,6 +3,10 @@ module.exports.checkError = (err, req, res) => {
     res.status(400).send({ message: err.message })
     return;
   }
+  if (err.message === 'Incorrect email or password') {
+    res.status(401).send({ message: err.message });
+    return;
+  }
   res.status(500).send({ message: err.message, name: err.name });
 }
 
