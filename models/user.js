@@ -17,7 +17,14 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png"
+    default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+    validate: {
+      validator(v) {
+        const regex = /https*:\/\/w*\.?[a-z\-\.\_\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]{1,}\#$/ ;
+        return regex.test(v);
+      },
+      message: "Error. This is not email"
+    }
   },
   email: {
     type: String,
