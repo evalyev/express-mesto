@@ -2,18 +2,18 @@ const User = require('../models/user');
 const bctypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { checkError, checkQueryOfNull } = require('../middlewares/checkError');
+const { checkQueryOfNull } = require('../middlewares/checkError');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then(users => checkQueryOfNull(users, req, res))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 };
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then(user => checkQueryOfNull(user, req, res))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 };
 
 module.exports.createUser = (req, res) => {
@@ -22,7 +22,7 @@ module.exports.createUser = (req, res) => {
   bctypt.hash(password, 10)
     .then(hash => User.create({ email, password: hash, name, about, avatar }))
     .then(user => res.send({ data: user }))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 };
 
 module.exports.updateProfile = (req, res) => {
@@ -30,7 +30,7 @@ module.exports.updateProfile = (req, res) => {
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then(user => checkQueryOfNull(user, req, res))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 }
 
 module.exports.updateAvatar = (req, res) => {
@@ -38,7 +38,7 @@ module.exports.updateAvatar = (req, res) => {
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then(user => checkQueryOfNull(user, req, res))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 }
 
 module.exports.login = (req, res) => {
@@ -57,11 +57,11 @@ module.exports.login = (req, res) => {
         })
         .send({data: user}); 
     })
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 }
 
 module.exports.getThisUser = (req, res) => {
   User.findById(req.user._id)
     .then(user => checkQueryOfNull(user, req, res))
-    .catch(err => checkError(err, req, res));
+    .catch(err => next(err));
 }

@@ -6,6 +6,7 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const auth = require('./middlewares/auth');
 const apiAuth = require('./middlewares/api-auth');
+const checkErrors = require('./middlewares/check-errors');
 
 const {createUser, login} = require('./controllers/users');
 
@@ -32,6 +33,9 @@ app.use(auth);
 app.use('/users', apiAuth, require('./routes/users'));
 app.use('/cards', apiAuth, require('./routes/cards'));
 
+
+
+app.use(checkErrors);
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
