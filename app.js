@@ -24,14 +24,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log("Ошибка: " + res.message)
 })
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6153425b4b8ee76a1e903416' // вставьте сюда _id пользователя
-  };
-
-  next();
-}); 
-
 app.post('/signin', login);
 app.post('/signup', createUser); 
 
