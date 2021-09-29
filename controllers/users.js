@@ -55,7 +55,7 @@ module.exports.login = (req, res) => {
           httpOnly: true,
           sameSite: true
         })
-        .end(); // если у ответа нет тела, можно использовать метод end 
+        .send({data: user}); 
     })
     .catch(err => checkError(err, req, res));
 }

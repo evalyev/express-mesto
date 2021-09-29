@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const auth = require('./middlewares/auth');
 const apiAuth = require('./middlewares/api-auth');
 
-const {createUser, login} = require('../controllers/users');
+const {createUser, login} = require('./controllers/users');
 
 const app = express(); 
 

@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 
 const {checkError, checkQueryOfNull} = require('../middlewares/checkError');
+const {checkPermissionsCard} = require('../middlewares/checkPermissions');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -18,7 +19,13 @@ module.exports.createCard = (req, res) => {
 }
 
 module.exports.removeCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
+    .then(card => {
+      if (!checkPermissionsCard(card, req.user)) {
+        return res.status(404).send({ message: "Not found" })
+      }
+      return Card.findByIdAndRemove(req.params.cardId)
+    })
     .then(card => checkQueryOfNull(card, req, res) )
     .catch(err => checkError(err, req, res) );
 }
