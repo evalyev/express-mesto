@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config(); 
 const cookieParser = require('cookie-parser');
 const auth = require('./middlewares/auth');
+const apiAuth = require('./middlewares/api-auth');
 
 const {createUser, login} = require('../controllers/users');
 
@@ -36,8 +37,8 @@ app.post('/signup', createUser);
 
 app.use(auth);
 
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', apiAuth, require('./routes/users'));
+app.use('/cards', apiAuth, require('./routes/cards'));
 
 
 // Слушаем 3000 порт
