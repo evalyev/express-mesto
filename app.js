@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config(); 
+const cookieParser = require('cookie-parser');
 
 const {createUser, login} = require('../controllers/users');
 
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
