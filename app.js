@@ -25,16 +25,6 @@ app.use((req, res, next) => {
   next();
 }); 
 
-app.get('/', (req, res) => {
-  res.send(
-        `<html>
-        <body>
-            <p>Ответ на сигнал из далёкого космоса</p>
-        </body>
-        </html>`
-    );
-}); 
-
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
