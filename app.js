@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config(); 
 
+const {createUser, login} = require('../controllers/users');
+
 const app = express(); 
 
 app.use(bodyParser.json());
@@ -28,6 +30,9 @@ app.use((req, res, next) => {
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+app.post('/signin', login);
+app.post('/signup', createUser); 
+
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
