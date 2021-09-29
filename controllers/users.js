@@ -59,3 +59,9 @@ module.exports.login = (req, res) => {
     })
     .catch(err => checkError(err, req, res));
 }
+
+module.exports.getThisUser = (req, res) => {
+  User.findById(req.user._id)
+    .then(user => checkQueryOfNull(user, req, res))
+    .catch(err => checkError(err, req, res));
+}
