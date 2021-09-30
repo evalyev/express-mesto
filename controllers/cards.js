@@ -1,51 +1,53 @@
 const Card = require('../models/card');
 
-const {checkQueryOfNull} = require('../middlewares/checkError');
-const {checkPermissionsCard} = require('../middlewares/checkPermissions');
+const { checkQueryOfNull } = require('../middlewares/checkError');
+const { checkPermissionsCard } = require('../middlewares/checkPermissions');
 
-module.exports.getCards = (req, res) => {
+const NotFoundError = require('../errors/not-found-err');
+
+module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then(cards => checkQueryOfNull(cards, req, res) )
-    .catch(err => next(err) );
-}
+    .then((cards) => checkQueryOfNull(cards, req, res, next))
+    .catch((err) => next(err));
+};
 
-module.exports.createCard = (req, res) => {
-  const {name, link} = req.body;
+module.exports.createCard = (req, res, next) => {
+  const { name, link } = req.body;
   const owner = req.user._id;
 
-  Card.create({name, link, owner})
-    .then(card => res.send({data: card}))
-    .catch(err => next(err) );
-}
+  Card.create({ name, link, owner })
+    .then((card) => res.send({ data: card }))
+    .catch((err) => next(err));
+};
 
-module.exports.removeCard = (req, res) => {
+module.exports.removeCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .then(card => {
+    .then((card) => {
       if (!checkPermissionsCard(card, req.user)) {
-        return res.status(404).send({ message: "Not found" })
+        return Promise.reject(new NotFoundError('Not found'));
       }
-      return Card.findByIdAndRemove(req.params.cardId)
+      return Card.findByIdAndRemove(req.params.cardId);
     })
-    .then(card => checkQueryOfNull(card, req, res) )
-    .catch(err => next(err) );
-}
+    .then((card) => checkQueryOfNull(card, req, res, next))
+    .catch((err) => next(err));
+};
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then(card => checkQueryOfNull(card, req, res) )
-    .catch(err => next(err) );
-}
+    .then((card) => checkQueryOfNull(card, req, res, next))
+    .catch((err) => next(err));
+};
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
-  ) 
-    .then(card => checkQueryOfNull(card, req, res) )
-    .catch(err => next(err) );
-}
+  )
+    .then((card) => checkQueryOfNull(card, req, res, next))
+    .catch((err) => next(err));
+};

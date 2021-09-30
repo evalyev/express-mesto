@@ -1,22 +1,26 @@
 const jwt = require('jsonwebtoken');
+const AuthError = require('../errors/auth-error');
+const checkError = require('./check-errors');
 
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    return res.status(401).send({ message: 'Error. You need to log in' });
+    return checkError(new AuthError('Error. You need to log in'), req, res, next);
   }
 
   let payload;
-  
+
   try {
     // попытаемся верифицировать токен
+    // eslint-disable-next-line no-undef
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
     // отправим ошибку, если не получилось
-    return res.status(401).send({ message: 'Error. You need to log in' });
+    return checkError(new AuthError('Error. You need to log in'), req, res, next);
   }
 
   req.user = payload;
-  next(); 
-}
+  next();
+};

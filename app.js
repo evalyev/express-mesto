@@ -1,16 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// eslint-disable-next-line no-unused-vars
 const path = require('path');
 const bodyParser = require('body-parser');
-require('dotenv').config(); 
+require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const { celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
-const apiAuth = require('./middlewares/api-auth');
 const checkErrors = require('./middlewares/check-errors');
 
-const {createUser, login} = require('./controllers/users');
+const { createUser, login } = require('./controllers/users');
 
-const app = express(); 
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -18,22 +19,31 @@ app.use(cookieParser());
 
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true
-}).then(res => {
-  console.log("ПОДКЛЮЧИЛИСЬ К БД")
-}).catch(res => {
-  console.log("Ошибка: " + res.message)
-})
+  useNewUrlParser: true,
+}).then(() => {
+  console.log('ПОДКЛЮЧИЛИСЬ К БД');
+}).catch((res) => {
+  console.log(`Ошибка: ${res.message}`);
+});
 
-app.post('/signin', login);
-app.post('/signup', createUser); 
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }).unknown(true),
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().uri(),
+  }).unknown(true),
+}), createUser);
 
 app.use(auth);
-
-app.use('/users', apiAuth, require('./routes/users'));
-app.use('/cards', apiAuth, require('./routes/cards'));
-
-
 
 app.use(checkErrors);
 
