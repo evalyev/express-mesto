@@ -25,7 +25,9 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       email, password: hash, name, about, avatar,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({
+      name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+    }))
     .catch((err) => next(err));
 };
 
@@ -59,7 +61,9 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .send({ data: user });
+        .send({
+          name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+        });
     })
     .catch((err) => next(err));
 };
