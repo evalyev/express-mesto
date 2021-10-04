@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
+const { regexUrl } = require('./utils/constants');
 
 const { createUser, login } = require('./controllers/users');
 
@@ -30,7 +31,7 @@ app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  }).unknown(true),
+  }),
 }), login);
 
 app.post('/signup', celebrate({
@@ -39,11 +40,14 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri(),
-  }).unknown(true),
+    avatar: Joi.string().pattern(regexUrl),
+  }),
 }), createUser);
 
 app.use(auth);
+
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 app.use(checkErrors);
 
