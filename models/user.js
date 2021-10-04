@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const { regexUrl } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -20,8 +21,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(v) {
-        const regex = /https?:\/\/w*\.?[a-z\-._~:/?#[\]@!$&'()*+,;=]{0,}/i;
-        return regex.test(v);
+        return regexUrl.test(v);
       },
       message: 'Error. This is not link',
     },
