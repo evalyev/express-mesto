@@ -11,7 +11,7 @@ module.exports = (err, req, res, next) => {
   if (err.message === 'Incorrect email or password') {
     return res.status(401).send({ message: err.message });
   }
-  if (err.name === 'MongoError' && err.code === 11000) {
+  if (err.name === 'MongoServerError' && err.code === 11000) {
     return res.status(409).send({ message: err.message });
   }
   res.status(500).send({ message: err.message });
