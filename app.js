@@ -5,7 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
 const { regexUrl } = require('./utils/constants');
@@ -48,6 +48,8 @@ app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use(errors());
 
 app.use(checkErrors);
 
