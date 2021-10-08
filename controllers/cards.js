@@ -4,6 +4,7 @@ const { checkQueryOfNull } = require('../middlewares/checkError');
 const { checkPermissionsCard } = require('../middlewares/checkPermissions');
 
 const ForbiddenError = require('../errors/forbidden-err');
+const NotFoundError = require('../errors/not-found-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -23,6 +24,9 @@ module.exports.createCard = (req, res, next) => {
 module.exports.removeCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
+      if (!card) {
+        return Promise.reject(new NotFoundError('Card not found'));
+      }
       if (!checkPermissionsCard(card, req.user)) {
         return Promise.reject(new ForbiddenError('Forbidden error'));
       }

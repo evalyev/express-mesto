@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const { checkQueryOfNull } = require('../middlewares/checkError');
+const ConflictError = require('../errors/conflict-err');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -28,7 +29,12 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.status(200).send({
       name: user.name, about: user.about, avatar: user.avatar, email: user.email,
     }))
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        next(new ConflictError(err.message));
+      }
+      next(err);
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {
