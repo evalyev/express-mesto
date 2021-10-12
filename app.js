@@ -28,7 +28,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log(`Ошибка: ${res.message}`);
 });
 
-app.use(function (req, res, next) {
+app.use('*', function (req, res, next) {
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
   // проверяем, что источник запроса есть среди разрешённых 
   // if (allowedCors.includes(origin)) {
