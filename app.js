@@ -9,6 +9,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
 const { regexUrl, allowedCors, DEFAULT_ALLOWED_METHODS } = require('./utils/constants');
+const { requestLogger, errorLogger } = require('./middlewares/logger'); 
 
 const { createUser, login } = require('./controllers/users');
 
@@ -42,6 +43,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(requestLogger);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -69,6 +72,8 @@ app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use(errorLogger);
 
 app.use(errors());
 
