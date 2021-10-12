@@ -4,7 +4,8 @@ const regexUrl = /https?:\/\/(www\.)?[a-z0-9\-_~:\/?#[\]@!$&'()*+,;=]{1,}\.[a-z0
 const allowedCors = [
   'http://bakaev.nomoredomains.club',
   'https://bakaev.nomoredomains.club',
-  'localhost:80'
+  'http://localhost:3000',
+  'https://localhost:3000'
 ];
 
 const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
