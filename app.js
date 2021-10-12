@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
-const { regexUrl } = require('./utils/constants');
+const { regexUrl, allowedCors, DEFAULT_ALLOWED_METHODS } = require('./utils/constants');
 
 const { createUser, login } = require('./controllers/users');
 
@@ -25,6 +25,21 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log('ПОДКЛЮЧИЛИСЬ К БД');
 }).catch((res) => {
   console.log(`Ошибка: ${res.message}`);
+});
+
+app.use(function (req, res, next) {
+  const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
+  // проверяем, что источник запроса есть среди разрешённых 
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
+  if (method === 'OPTIONS') {
+    // разрешаем кросс-доменные запросы любых типов (по умолчанию) 
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+  }
+
+  next();
 });
 
 app.post('/signin', celebrate({
