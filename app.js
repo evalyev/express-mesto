@@ -49,7 +49,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 //   next();
 // });
 
-app.use('*', cors(options))
+app.use(cors(options))
 
 app.use(requestLogger);
 
