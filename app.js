@@ -9,7 +9,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
 const { regexUrl, allowedCors, DEFAULT_ALLOWED_METHODS } = require('./utils/constants');
-const { requestLogger, errorLogger } = require('./middlewares/logger'); 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { createUser, login } = require('./controllers/users');
 
@@ -31,6 +31,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(function (req, res, next) {
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
   // проверяем, что источник запроса есть среди разрешённых 
+  // if (allowedCors.includes(origin)) {
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
@@ -66,7 +67,7 @@ app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
-}); 
+});
 
 app.use(auth);
 
