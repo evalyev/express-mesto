@@ -21,7 +21,6 @@
     "express": "^4.17.1",
     "express-winston": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mogoose": "0.0.1-security",
     "mongoose": "^6.0.8",
     "validator": "^13.6.0"
   },
