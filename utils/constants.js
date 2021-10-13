@@ -19,7 +19,7 @@ const options = {
   preflightContinue: false,
   optionsSuccessStatus: 204,
   allowedHeaders: ['Content-Type', 'origin', 'Authorization', 'Accept', 'Set-Cookie'],
-  credentials: true,
+  // credentials: true,
 };
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
