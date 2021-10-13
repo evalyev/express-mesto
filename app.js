@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
 // eslint-disable-next-line no-unused-vars
@@ -6,13 +7,13 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const cors = require('cors');
 const auth = require('./middlewares/auth');
 const checkErrors = require('./middlewares/check-errors');
-const { regexUrl, allowedCors, DEFAULT_ALLOWED_METHODS, options } = require('./utils/constants');
+const { regexUrl, options } = require('./utils/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { createUser, login } = require('./controllers/users');
-const cors = require('cors');
 
 const app = express();
 
@@ -29,27 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   console.log(`Ошибка: ${res.message}`);
 });
 
-// app.use('*', function (req, res, next) {
-//   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
-//   // проверяем, что источник запроса есть среди разрешённых 
-//   // if (allowedCors.includes(origin)) {
-//   if (allowedCors.includes(origin)) {
-//     res.header('Access-Control-Allow-Origin', origin);
-//     res.header('Access-Control-Allow-Credentials', true)
-//   }
-//   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
-//   const requestHeaders = req.headers['access-control-request-headers'];
-//   if (method === 'OPTIONS') {
-//     // разрешаем кросс-доменные запросы любых типов (по умолчанию) 
-//     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-//     res.header('Access-Control-Allow-Headers', requestHeaders);
-//     return res.end();
-//   }
-
-//   next();
-// });
-
-app.use(cors(options))
+app.use(cors(options));
 
 app.use(requestLogger);
 
