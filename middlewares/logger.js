@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-unresolved
 const winston = require('winston');
-const expressWinston = require('express-winston'); 
+const expressWinston = require('express-winston');
 
 // создадим логгер запросов
 const requestLogger = expressWinston.logger({
@@ -7,7 +8,7 @@ const requestLogger = expressWinston.logger({
     new winston.transports.File({ filename: 'request.log' }),
   ],
   format: winston.format.json(),
-}); 
+});
 
 // логгер ошибок
 const errorLogger = expressWinston.errorLogger({
@@ -15,9 +16,9 @@ const errorLogger = expressWinston.errorLogger({
     new winston.transports.File({ filename: 'error.log' }),
   ],
   format: winston.format.json(),
-}); 
+});
 
 module.exports = {
   requestLogger,
   errorLogger,
-}; 
+};
