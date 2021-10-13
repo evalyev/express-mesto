@@ -10,10 +10,7 @@ const allowedCors = [
 
 const options = {
   origin: [
-    'http://bakaev.nomoredomains.club',
-    'https://bakaev.nomoredomains.club',
-    'http://localhost:3000',
-    'https://localhost:3000',
+    '*',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
