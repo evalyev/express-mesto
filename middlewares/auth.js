@@ -30,7 +30,6 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  res.send({ authorization });
 
   // убеждаемся, что он есть или начинается с Bearer
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -49,6 +48,8 @@ module.exports = (req, res, next) => {
     // отправим ошибку, если не получилось
     return next(new AuthError('Error. You need to log in'));
   }
+
+  res.send({ payload });
 
   req.user = payload;
   next();
