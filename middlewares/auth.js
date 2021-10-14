@@ -49,8 +49,6 @@ module.exports = (req, res, next) => {
     return next(new AuthError('Error. You need to log in'));
   }
 
-  res.send({ payload });
-
   req.user = payload;
   next();
 };
