@@ -12,7 +12,7 @@ module.exports.getCards = (req, res, next) => {
       if (cards.length !== 0) {
         res.send({ data: cards });
       } else {
-        res.send({ data: null });
+        res.send(null);
       }
     })
     .catch((err) => next(err));
