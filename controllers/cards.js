@@ -9,7 +9,7 @@ const NotFoundError = require('../errors/not-found-err');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
-      if (cards) {
+      if (cards.length !== 0) {
         res.send({ data: cards });
       } else {
         res.send(null);
